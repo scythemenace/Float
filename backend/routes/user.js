@@ -7,8 +7,9 @@ const JWT_SECRET = require("../config/jwt_secret");
 
 const router = express.Router();
 
-const signUpValidator = require("../config/input_validation");
-const signInValidator = require("../config/input_validation");
+const { signUpValidator } = require("../config/input_validation");
+const { signInValidator } = require("../config/input_validation");
+const { updateValidator } = require("../config/input_validation");
 
 const { authMiddleware } = require("../middlewares/user");
 
@@ -30,7 +31,7 @@ router.post("/signup", async (req, res) => {
     });
   }
 
-  const hashedPassword = bcrypt.hash(password, saltRounds);
+  const hashedPassword = await bcrypt.hash(body.password, saltRounds);
 
   const user = new User({
     username: body.username,
@@ -39,10 +40,10 @@ router.post("/signup", async (req, res) => {
     password: hashedPassword,
   });
 
-  const token = jwt.sign({ username: body.username }, JWT_SECRET);
-  user.token = token;
-
   await user.save();
+
+  const userId = user._id;
+  const token = jwt.sign({ userId: userId }, JWT_SECRET);
 
   return res.status(200).json({
     message: "User created successfully",
@@ -65,10 +66,16 @@ router.post("/signin", async (req, res) => {
   });
 
   if (userExists) {
-    const isPasswordCorrect = bcrypt.compare(password, userExists.password);
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      userExists.password,
+    );
+
     if (isPasswordCorrect) {
+      const token = jwt.sign({ username: userExists.username }, JWT_SECRET);
+
       return res.status(200).json({
-        token: userExists.token,
+        token: token,
       });
     } else {
       return res.status(401).json({
@@ -119,7 +126,7 @@ router.put("/", authMiddleware, async (req, res) => {
 });
 
 router.get("/bulk", async (req, res) => {
-  const friendName = req.query.filter || "";
+  const filter = req.query.filter || "";
 
   const users = await User.find({
     $or: [

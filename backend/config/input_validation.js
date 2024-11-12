@@ -1,8 +1,8 @@
-import { z } from "zod";
+const z = require("zod");
 
 const signUpValidator = z.object({
   username: z.string().email().min(3).max(30),
-  firstName: z.string().min(6),
+  firstName: z.string().min(2),
   lastName: z.string().max(50),
   password: z.string().max(50),
 });
