@@ -13,9 +13,9 @@ const signInValidator = z.object({
 });
 
 const updateValidator = z.object({
-  firstName: z.string().min(6),
-  lastName: z.string().max(50),
-  password: z.string().max(50),
+  firstName: z.string().min(6).optional(),
+  lastName: z.string().max(50).optional(),
+  password: z.string().max(50).optional(),
 });
 
 module.exports = {

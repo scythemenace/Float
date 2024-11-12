@@ -82,7 +82,14 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.put("/update", authMiddleware, async (req, res) => {
+router.put("/", authMiddleware, async (req, res) => {
+  const parsedOutput = updateValidator.safeParse(req.body);
+  if (!parsedOutput.success) {
+    return res.status(411).json({
+      message: "Error while updating information",
+    });
+  }
+
   const { password, firstName, lastName } = req.body;
 
   const userExists = await User.findOne({
@@ -103,6 +110,12 @@ router.put("/update", authMiddleware, async (req, res) => {
   if (lastName) {
     userExists.lastName = lastName;
   }
+
+  await userExists.save();
+
+  return res.status(200).json({
+    message: "Updated Successfully",
+  });
 });
 
 module.exports = router;
