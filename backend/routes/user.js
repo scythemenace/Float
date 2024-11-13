@@ -1,5 +1,6 @@
 const express = require("express");
-const User = require("../db/dbSchema");
+const { User } = require("../db/dbSchema");
+const { Account } = require("../db/dbSchema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10; // Computation required
@@ -33,6 +34,7 @@ router.post("/signup", async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(body.password, saltRounds);
 
+  //Creating the user
   const user = new User({
     username: body.username,
     firstName: body.firstName,
@@ -44,6 +46,16 @@ router.post("/signup", async (req, res) => {
 
   const userId = user._id;
   const token = jwt.sign({ userId: userId }, JWT_SECRET);
+
+  const random_balance = Math.random() * 1000 + 1;
+
+  //Creating a random account balance in order to simulate some person creating an account in the bank
+  const account = new Account({
+    userId: userId,
+    balance: random_balance,
+  });
+
+  await account.save();
 
   return res.status(200).json({
     message: "User created successfully",
@@ -67,7 +79,7 @@ router.post("/signin", async (req, res) => {
 
   if (userExists) {
     const isPasswordCorrect = await bcrypt.compare(
-      password,
+      body.password,
       userExists.password,
     );
 
