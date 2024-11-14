@@ -47,7 +47,7 @@ router.post("/signup", async (req, res) => {
   const userId = user._id;
   const token = jwt.sign({ userId: userId }, JWT_SECRET);
 
-  const random_balance = Math.random() * 1000 + 1;
+  const random_balance = Math.random() * 10000 + 1;
 
   //Creating a random account balance in order to simulate some person creating an account in the bank
   const account = new Account({
@@ -84,7 +84,7 @@ router.post("/signin", async (req, res) => {
     );
 
     if (isPasswordCorrect) {
-      const token = jwt.sign({ username: userExists.username }, JWT_SECRET);
+      const token = jwt.sign({ userId: userExists._id }, JWT_SECRET);
 
       return res.status(200).json({
         token: token,
@@ -112,11 +112,18 @@ router.put("/", authMiddleware, async (req, res) => {
   const { password, firstName, lastName } = req.body;
 
   const userExists = await User.findOne({
-    username: req.userId,
+    _id: req.userId,
   });
 
   if (password) {
-    const hashedPassword = bcrypt.hash(password, saltRounds);
+    const isSame = await bcrypt.compare(password, userExists.password);
+    if (isSame) {
+      return res.status(400).json({
+        message: "New password cannot be the same as the old password",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
     if (userExists) {
       userExists.password = hashedPassword;
     }

@@ -1,3 +1,4 @@
+const { User } = require("../db/dbSchema");
 const JWT_SECRET = require("../config/jwt_secret");
 const jwt = require("jsonwebtoken");
 
@@ -14,8 +15,8 @@ const authMiddleware = async (req, res, next) => {
 
   const decoded = jwt.verify(token, JWT_SECRET);
 
-  if (decoded && Object.keys(decoded).length >= 1 && decoded.username) {
-    const userExists = await User.findOne({ username: decoded.username });
+  if (decoded && Object.keys(decoded).length >= 1 && decoded.userId) {
+    const userExists = await User.findOne({ _id: decoded.userId });
     if (userExists) {
       req.userId = decoded.userId;
       return next();
