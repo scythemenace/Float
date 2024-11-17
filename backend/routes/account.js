@@ -1,6 +1,5 @@
 const express = require("express");
 const assert = require("assert");
-const mongoose = require("mongoose");
 const { Account } = require("../db/dbSchema");
 const { authMiddleware } = require("../middlewares/user");
 const router = express.Router();
@@ -48,6 +47,10 @@ router.post("/transfer", authMiddleware, async (req, res) => {
         // Check if sender has sufficient balance
         if (!sender || req.body.amount > sender.balance) {
           throw new Error("Insufficient Balance");
+        }
+
+        if (req.body.amount < 0) {
+          throw new Error("Transaction Declined: Amount cannot be less than 0");
         }
 
         const sender_old_balance = sender.balance;
@@ -108,8 +111,14 @@ router.post("/transfer", authMiddleware, async (req, res) => {
         res.status(400).json({
           message: "Invalid Account",
         });
+      } else if (error.message == "Transaction Declined: ") {
+        res.status(400).json({
+          message: "Invalid Account",
+        });
       } else {
-        res.status(500).json({ message: "Transaction failed" });
+        res.status(500).json({
+          message: "Transaction Declined: Amount cannot be less than 0",
+        });
       }
     })
     .finally(() => session.endSession());
