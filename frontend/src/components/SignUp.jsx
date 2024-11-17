@@ -1,5 +1,6 @@
 import { useState } from "react";
 import logo from "../assets/logo.png";
+import axios from "axios";
 
 import { useNavigate } from "react-router";
 
@@ -10,6 +11,21 @@ export function SignUp() {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+
+  const onSubmit = async () => {
+    try {
+      const response = await axios.post("/api/v1/user/signup", {
+        firstName: firstName,
+        lastName: lastName,
+        username: email,
+        password: password,
+      });
+
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -117,6 +133,9 @@ export function SignUp() {
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={() => {
+                  onSubmit();
+                }}
               >
                 Sign in
               </button>
