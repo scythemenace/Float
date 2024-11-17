@@ -1,72 +1,21 @@
-import { useState } from "react";
 import logo from "../assets/logo.png";
-
 import { useNavigate } from "react-router";
 
-export function SignUp() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
+export function SignIn() {
   const navigate = useNavigate();
 
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img alt="Float logo" src={logo} className="mx-auto h-36 w-auto" />
+          <img alt="Your Company" src={logo} className="mx-auto h-36 w-auto" />
           <h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Sign up for your account
+            Sign in to your account
           </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form action="#" method="POST" className="space-y-6">
-            <div>
-              <label
-                htmlFor="firstName"
-                className="block text-sm/6 font-medium text-gray-900"
-              >
-                First Name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="firstName"
-                  required
-                  autoComplete="given-name"
-                  onChange={(e) => {
-                    setFirstName(e.target.value);
-                  }}
-                  className="block w-full rounded-md px-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="lastName"
-                className="block text-sm/6 font-medium text-gray-900"
-              >
-                Last Name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="lastName"
-                  required
-                  autoComplete="family-name"
-                  onChange={(e) => {
-                    setLastName(e.target.value);
-                  }}
-                  className="block w-full rounded-md px-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
             <div>
               <label
                 htmlFor="email"
@@ -81,9 +30,6 @@ export function SignUp() {
                   type="email"
                   required
                   autoComplete="email"
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
                   className="block w-full rounded-md px-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 />
               </div>
@@ -97,6 +43,14 @@ export function SignUp() {
                 >
                   Password
                 </label>
+                <div className="text-sm">
+                  <a
+                    href="#"
+                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
               </div>
               <div className="mt-2">
                 <input
@@ -105,9 +59,6 @@ export function SignUp() {
                   type="password"
                   required
                   autoComplete="current-password"
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
                   className="block w-full rounded-md px-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 />
               </div>
@@ -124,20 +75,20 @@ export function SignUp() {
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Already have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a
               href={"#"}
               onClick={(e) => {
                 e.preventDefault();
-                navigate("/signin");
+                navigate("/signup");
               }}
               className="font-semibold text-indigo-600 hover:text-indigo-500"
             >
-              Login
+              Sign Up
             </a>
           </p>
         </div>
-      </div>{" "}
+      </div>
     </>
   );
 }
