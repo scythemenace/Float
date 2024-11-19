@@ -1,6 +1,8 @@
 import logo from "../assets/logo.png";
 import userProfile from "../assets/user.svg";
 import Users from "./Users.jsx";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import {
   Disclosure,
@@ -16,6 +18,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 const user = {
   imageUrl: userProfile,
 };
+
 const navigation = [
   { name: "Dashboard", current: true },
   /* You can add more links like this:
@@ -34,6 +37,23 @@ function classNames(...classes) {
 }
 
 export function Dashboard() {
+  const [balance, setBalance] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/v1/account/balance", {
+        headers: {
+          authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        setBalance(response.data.balance);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
   return (
     <>
       <div className="min-h-full">
@@ -208,7 +228,9 @@ export function Dashboard() {
                 Account Balance
               </h3>
             </div>
-            <h1 className="text-4xl font-bold text-cyan-700 my-2">$5000</h1>
+            <h1 className="text-4xl font-bold text-cyan-700 my-2">
+              ${balance}
+            </h1>
             <form className="max-w-full mx-auto my-8">
               <label
                 htmlFor="default-search"
