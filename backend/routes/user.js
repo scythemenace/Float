@@ -88,7 +88,9 @@ router.post("/signin", async (req, res) => {
       const token = jwt.sign({ userId: userExists._id }, JWT_SECRET);
 
       return res.status(200).json({
+        message: "Logged in successfully",
         token: token,
+        firstName: userExists.firstName,
       });
     } else {
       return res.status(401).json({
@@ -148,19 +150,25 @@ router.put("/", authMiddleware, async (req, res) => {
 router.get("/bulk", authMiddleware, async (req, res) => {
   const filter = req.query.filter || "";
 
+  const filterTerms = filter.split(" ").filter((term) => term);
+
   const users = await User.find({
-    $or: [
-      {
-        firstName: { $regex: filter },
-      },
-      {
-        lastName: { $regex: filter },
-      },
-    ],
+    $and: filterTerms.map((term) => ({
+      $or: [
+        { firstName: { $regex: term, $options: "i" } },
+        { lastName: { $regex: term, $options: "i" } },
+      ],
+    })),
+  });
+
+  const return_users = users.filter((user) => {
+    if (!(user._id == req.userId)) {
+      return user;
+    }
   });
 
   res.status(200).json({
-    user: users.map((user) => ({
+    user: return_users.map((user) => ({
       firstName: user.firstName,
       lastName: user.lastName,
       _id: user._id,
