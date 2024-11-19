@@ -3,6 +3,7 @@ import userProfile from "../assets/user.svg";
 import Users from "./Users.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 import {
   Disclosure,
@@ -38,6 +39,10 @@ function classNames(...classes) {
 
 export function Dashboard() {
   const [balance, setBalance] = useState("");
+  const [users, setUsers] = useState([]);
+  const [filters, setFilters] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -110,16 +115,36 @@ export function Dashboard() {
                       transition
                       className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                     >
-                      {userNavigation.map((item) => (
-                        <MenuItem key={item.name}>
-                          <a
-                            href={item.href}
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                          >
-                            {item.name}
-                          </a>
-                        </MenuItem>
-                      ))}
+                      {userNavigation.map((item) => {
+                        if (item.name == "Sign out") {
+                          return (
+                            <MenuItem key={item.name}>
+                              <a
+                                href={item.href}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  localStorage.removeItem("token");
+                                  localStorage.removeItem("firstName");
+                                  navigate("/signin");
+                                }}
+                                className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                              >
+                                {item.name}
+                              </a>
+                            </MenuItem>
+                          );
+                        }
+                        return (
+                          <MenuItem key={item.name}>
+                            <a
+                              href={item.href}
+                              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                            >
+                              {item.name}
+                            </a>
+                          </MenuItem>
+                        );
+                      })}
                     </MenuItems>
                   </Menu>
                 </div>
@@ -261,10 +286,31 @@ export function Dashboard() {
                   id="default-search"
                   className="block w-full p-4 ps-10 text-sm text-gray-900 outline-none border border-gray-300 rounded-lg bg-gray-50 focus:ring-1 focus:ring-gray-800 focus:border-gray-800 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-800 dark:focus:ring-gray-800 dark:focus:border-gray-800"
                   placeholder="Search for other users..."
+                  onChange={(e) => {
+                    setFilters(e.target.value);
+                  }}
                   required
                 />
                 <button
-                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    axios
+                      .get("http://localhost:3000/api/v1/user/bulk", {
+                        headers: {
+                          authorization:
+                            "Bearer " + localStorage.getItem("token"),
+                        },
+                        params: {
+                          filter: filters,
+                        },
+                      })
+                      .then((response) => {
+                        setUsers(response.data.user);
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                      });
+                  }}
                   className="text-white absolute end-2.5 bottom-2.5 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-800"
                 >
                   Search
@@ -272,9 +318,18 @@ export function Dashboard() {
               </div>
             </form>
             <div className="py-5 space-y-5">
-              <Users num={1}></Users>
-              <Users num={2}></Users>
-              <Users num={3}></Users>
+              {users &&
+                users.map((user) => {
+                  if (user.firstName && user.lastName && user._id) {
+                    return (
+                      <Users
+                        key={user._id}
+                        firstName={user.firstName}
+                        lastName={user.lastName}
+                      ></Users>
+                    );
+                  }
+                })}
             </div>
           </div>
         </main>
