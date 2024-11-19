@@ -12,16 +12,24 @@ export function SignUp() {
 
   const navigate = useNavigate();
 
-  const onSubmit = async () => {
+  const onSubmit = async (e) => {
     try {
-      const response = await axios.post("/api/v1/user/signup", {
-        firstName: firstName,
-        lastName: lastName,
-        username: email,
-        password: password,
-      });
+      e.preventDefault();
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/user/signup",
+        {
+          firstName: firstName,
+          lastName: lastName,
+          username: email,
+          password: password,
+        },
+      );
 
-      console.log(response);
+      if (response.status == 200) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("firstName", response.data.firstName);
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.error(err);
     }
@@ -133,8 +141,8 @@ export function SignUp() {
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                onClick={() => {
-                  onSubmit();
+                onClick={(e) => {
+                  onSubmit(e);
                 }}
               >
                 Sign in
