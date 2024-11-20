@@ -13,7 +13,7 @@ const signInValidator = z.object({
 });
 
 const updateValidator = z.object({
-  firstName: z.string().min(2).optional(),
+  firstName: z.string().min(2).optional().or(z.literal("")),
   lastName: z.string().max(50).optional(),
   password: z.string().max(50).optional(),
 });
