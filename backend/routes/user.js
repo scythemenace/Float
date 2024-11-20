@@ -118,6 +118,9 @@ router.put("/", authMiddleware, async (req, res) => {
     _id: req.userId,
   });
 
+  /*Manual mapping done on purpose, if we use .map() then somebody code maliciously update settings we don't want them
+   * to update*/
+
   if (password) {
     const isSame = await bcrypt.compare(password, userExists.password);
     if (isSame) {
@@ -149,6 +152,13 @@ router.put("/", authMiddleware, async (req, res) => {
 
 router.get("/bulk", authMiddleware, async (req, res) => {
   const filter = req.query.filter || "";
+
+  // We don't want the user getting free access to the whole user list
+  if (filter == "") {
+    return res.status(200).json({
+      user: [],
+    });
+  }
 
   const filterTerms = filter.split(" ").filter((term) => term);
 

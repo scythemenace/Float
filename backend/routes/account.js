@@ -49,8 +49,8 @@ router.post("/transfer", authMiddleware, async (req, res) => {
           throw new Error("Insufficient Balance");
         }
 
-        if (req.body.amount < 0) {
-          throw new Error("Transaction Declined: Amount cannot be less than 0");
+        if (req.body.amount <= 0) {
+          throw new Error("Transaction Declined: Amount has to be more than 0");
         }
 
         const sender_old_balance = sender.balance;
@@ -93,7 +93,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
       const condition2 =
         receiver_old_balance + req.body.amount == receiver.balance;
 
-      // Check if the balances have been updated correctly
+      // To check if the balances have been updated correctly
       return {
         condition1,
         condition2,
@@ -117,7 +117,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
         });
       } else {
         res.status(500).json({
-          message: "Transaction Declined: Amount cannot be less than 0",
+          message: "Transaction Declined: Amount has to be more than 0",
         });
       }
     })
