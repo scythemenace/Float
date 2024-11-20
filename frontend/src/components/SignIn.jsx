@@ -32,7 +32,7 @@ export function SignIn() {
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-28 lg:px-8">
+      <div className="flex min-h-screen flex-1 flex-col justify-center items-center px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img alt="Your Company" src={logo} className="mx-auto h-36 w-auto" />
           <h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">

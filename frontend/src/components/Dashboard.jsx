@@ -28,9 +28,22 @@ const navigation = [
   { name: "Calendar", href: "#", current: false },
   { name: "Reports", href: "#", current: false },*/
 ];
+
+const signOut = (e, navigate) => {
+  e.preventDefault();
+  localStorage.removeItem("token");
+  localStorage.removeItem("firstName");
+  navigate("/signin");
+};
+
+const update = (e, navigate) => {
+  e.preventDefault();
+  navigate("/update");
+};
+
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Your Profile", href: "#", function: update },
+  { name: "Sign out", href: "#", function: signOut },
 ];
 
 function classNames(...classes) {
@@ -43,6 +56,20 @@ export function Dashboard() {
   const [filters, setFilters] = useState("");
 
   const navigate = useNavigate();
+
+  /* The filter in this case is a classic state of debounce. Even though we only fetch the results when the
+   search button is pressed, as good practice, I've implemented a debouncer here*/
+  const debounce = (fn, delay = 250) => {
+    let timer;
+
+    return function (...args) {
+      clearTimeout(timer);
+
+      timer = setTimeout(() => {
+        fn.apply(this, args);
+      }, delay);
+    };
+  };
 
   useEffect(() => {
     axios
@@ -116,28 +143,13 @@ export function Dashboard() {
                       className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                     >
                       {userNavigation.map((item) => {
-                        if (item.name == "Sign out") {
-                          return (
-                            <MenuItem key={item.name}>
-                              <a
-                                href={item.href}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  localStorage.removeItem("token");
-                                  localStorage.removeItem("firstName");
-                                  navigate("/signin");
-                                }}
-                                className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                              >
-                                {item.name}
-                              </a>
-                            </MenuItem>
-                          );
-                        }
                         return (
                           <MenuItem key={item.name}>
                             <a
                               href={item.href}
+                              onClick={(e) => {
+                                item.function(e, navigate);
+                              }}
                               className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                             >
                               {item.name}
@@ -254,7 +266,7 @@ export function Dashboard() {
               </h3>
             </div>
             <h1 className="text-4xl font-bold text-cyan-700 my-2">
-              ${balance}
+              ${Number(balance).toFixed(2)}
             </h1>
             <form className="max-w-full mx-auto my-8">
               <label
@@ -287,7 +299,7 @@ export function Dashboard() {
                   className="block w-full p-4 ps-10 text-sm text-gray-900 outline-none border border-gray-300 rounded-lg bg-gray-50 focus:ring-1 focus:ring-gray-800 focus:border-gray-800 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-800 dark:focus:ring-gray-800 dark:focus:border-gray-800"
                   placeholder="Search for other users..."
                   onChange={(e) => {
-                    setFilters(e.target.value);
+                    debounce(setFilters(e.target.value));
                   }}
                   required
                 />
@@ -324,6 +336,7 @@ export function Dashboard() {
                     return (
                       <Users
                         key={user._id}
+                        id={user._id}
                         firstName={user.firstName}
                         lastName={user.lastName}
                       ></Users>
