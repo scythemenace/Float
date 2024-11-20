@@ -4,7 +4,6 @@ import Users from "./Users.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
-import { config } from "../config.js";
 
 import {
   Disclosure,
@@ -17,7 +16,7 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-const apiUrl = config.apiUrl;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const user = {
   imageUrl: userProfile,

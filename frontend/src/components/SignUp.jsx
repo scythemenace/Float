@@ -1,11 +1,10 @@
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import axios from "axios";
-import { config } from "../config";
 
 import { useNavigate } from "react-router";
 
-const apiUrl = config.apiUrl;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export function SignUp() {
   const [firstName, setFirstName] = useState("");

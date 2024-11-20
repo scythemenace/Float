@@ -2,9 +2,8 @@ import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { config } from "../config";
 
-const apiUrl = config.apiUrl;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export function Send() {
   const [amount, setAmount] = useState("");
