@@ -1,8 +1,11 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const { frontendUrl } = require("./config/varUrl");
+require("dotenv").config();
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,
+  origin: [frontendUrl, "http://localhost:5173"],
   optionsSuccessStatus: 200,
 };
 
