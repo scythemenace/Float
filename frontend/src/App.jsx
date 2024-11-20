@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/logo.png"; // Make sure to import your logo component or image here
-import { useEffect } from "react";
 
 export function App() {
   const navigate = useNavigate();

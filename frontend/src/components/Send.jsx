@@ -3,6 +3,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export function Send() {
   const [amount, setAmount] = useState("");
   const { state } = useLocation();
@@ -102,7 +104,7 @@ export function Send() {
                     e.preventDefault();
                     axios
                       .post(
-                        "http://localhost:3000/api/v1/account/transfer",
+                        `${apiUrl}/api/v1/account/transfer`,
                         {
                           to: userId,
                           amount: Number(amount),

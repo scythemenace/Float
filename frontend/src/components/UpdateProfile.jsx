@@ -2,6 +2,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export function UpdateProfile() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -128,7 +130,7 @@ export function UpdateProfile() {
               if (firstName || lastName || password) {
                 axios
                   .put(
-                    "http://localhost:3000/api/v1/user/",
+                    `${apiUrl}/api/v1/user/`,
                     {
                       firstName: firstName,
                       lastName: lastName,

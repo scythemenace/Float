@@ -16,6 +16,8 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const user = {
   imageUrl: userProfile,
 };
@@ -73,7 +75,7 @@ export function Dashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/v1/account/balance", {
+      .get(`${apiUrl}/api/v1/account/balance`, {
         headers: {
           authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -307,7 +309,7 @@ export function Dashboard() {
                   onClick={(e) => {
                     e.preventDefault();
                     axios
-                      .get("http://localhost:3000/api/v1/user/bulk", {
+                      .get(`${apiUrl}/api/v1/user/bulk`, {
                         headers: {
                           authorization:
                             "Bearer " + localStorage.getItem("token"),

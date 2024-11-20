@@ -4,6 +4,8 @@ import axios from "axios";
 
 import { useNavigate } from "react-router";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export function SignUp() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -15,15 +17,12 @@ export function SignUp() {
   const onSubmit = async (e) => {
     try {
       e.preventDefault();
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/user/signup",
-        {
-          firstName: firstName,
-          lastName: lastName,
-          username: email,
-          password: password,
-        },
-      );
+      const response = await axios.post(`${apiUrl}/api/v1/user/signup`, {
+        firstName: firstName,
+        lastName: lastName,
+        username: email,
+        password: password,
+      });
 
       if (response.status == 200) {
         localStorage.setItem("token", response.data.token);
