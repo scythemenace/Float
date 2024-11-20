@@ -2,8 +2,9 @@ import logo from "../assets/logo.png";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { config } from "../config";
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = config.apiUrl;
 
 export function SignIn() {
   const [email, setEmail] = useState("");

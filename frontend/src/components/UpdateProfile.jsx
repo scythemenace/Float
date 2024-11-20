@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { config } from "../config";
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = config.apiUrl;
 
 export function UpdateProfile() {
   const [firstName, setFirstName] = useState("");
