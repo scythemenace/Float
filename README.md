@@ -91,8 +91,17 @@ Float is a secure and user-friendly banking web application simulator that allow
    ```bash
    cd ../frontend
    npm install
-   npm run dev
    ```
+
+   - Create a `.env` file in the `frontend` directory with the following:
+     ```
+     VITE_API_URL=<your-backend-url>
+     ```
+     
+   - Start the server:
+     ```bash
+     npm run dev
+     ```
 
 4. Open the application in your browser at:
    ```
