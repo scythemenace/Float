@@ -4,7 +4,7 @@ const { Account } = require("../db/dbSchema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10; // Computation required
-const JWT_SECRET = require("../config/jwt_secret");
+require("dotenv").config();
 
 const router = express.Router();
 
@@ -45,7 +45,7 @@ router.post("/signup", async (req, res) => {
   await user.save();
 
   const userId = user._id;
-  const token = jwt.sign({ userId: userId }, JWT_SECRET);
+  const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET);
 
   const random_balance = Math.random() * 10000 + 1;
 
@@ -85,7 +85,10 @@ router.post("/signin", async (req, res) => {
     );
 
     if (isPasswordCorrect) {
-      const token = jwt.sign({ userId: userExists._id }, JWT_SECRET);
+      const token = jwt.sign(
+        { userId: userExists._id },
+        process.env.JWT_SECRET,
+      );
 
       return res.status(200).json({
         message: "Logged in successfully",

@@ -6,13 +6,13 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 3000;
-
 const rootRouter = require("./routes/index");
 
 app.use("/api/v1", rootRouter);
 
-app.listen(PORT, (err) => {
+app.listen(process.env.PORT, (err) => {
   if (err) console.log(err);
-  console.log("Server listening on PORT", PORT);
+  console.log("Server listening on PORT", process.env.PORT);
 });
+
+module.exports = app;

@@ -1,6 +1,7 @@
 const { User } = require("../db/dbSchema");
-const JWT_SECRET = require("../config/jwt_secret");
 const jwt = require("jsonwebtoken");
+
+require("dotenv").config();
 
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -13,7 +14,7 @@ const authMiddleware = async (req, res, next) => {
   const array = authHeader.split(" ");
   const token = array[1];
 
-  const decoded = jwt.verify(token, JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
   if (decoded && Object.keys(decoded).length >= 1 && decoded.userId) {
     const userExists = await User.findOne({ _id: decoded.userId });
