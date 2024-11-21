@@ -188,6 +188,9 @@ export function Dashboard() {
                   key={item.name}
                   as="a"
                   href={item.href}
+                  onClick={(e) => {
+                    item.function(e, navigate);
+                  }}
                   aria-current={item.current ? "page" : undefined}
                   className={classNames(
                     item.current
