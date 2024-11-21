@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const uri = require("../config/mongoDBURI");
+require("dotenv").config();
 
-mongoose.connect(uri);
+mongoose.connect(process.env.MONGO_DB_URI);
 
 // Define Schema
 
