@@ -32,14 +32,12 @@ const navigation = [
 ];
 
 const signOut = (e, navigate) => {
-  e.preventDefault();
   localStorage.removeItem("token");
   localStorage.removeItem("firstName");
   navigate("/signin");
 };
 
 const update = (e, navigate) => {
-  e.preventDefault();
   navigate("/update");
 };
 
