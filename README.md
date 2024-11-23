@@ -1,6 +1,6 @@
 # Float: A Simple Banking Web Application Simulator
 
-Float is a secure and user-friendly banking web application simulator that allows users to perform financial transactions, manage profiles, and experience seamless authentication. Designed with data integrity and performance in mind, Float offers a robust platform for simulating banking activities.
+Float is a banking web application simulator that allows users to perform financial transactions, manage profiles, and experience seamless authentication. Designed with data integrity and performance in mind, Float offers a robust platform for simulating banking activities.
 
 ---
 
